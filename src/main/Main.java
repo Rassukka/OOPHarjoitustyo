@@ -23,5 +23,5 @@ public class Main {
             System.exit(0);
         }
     }
-    //lol
+    //lolxd
 }
