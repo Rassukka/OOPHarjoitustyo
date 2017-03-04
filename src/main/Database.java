@@ -63,7 +63,33 @@ public class Database {
         }
     }
 
+    public void lisaaElokuva(Elokuva elokuva) {
+        String sql = "INSERT INTO elokuva(nimi, tyyppi, is3D, paaHenkilo, ikaraja, ensiIlta, salinNumero, vikanaytos, naytosAika) " + "VALUES (?,?,?,?,?,?,?,?,?)";
 
+        try {
+            Class.forName("org.sqlite.JDBC");
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:data.db");
+
+            //Käytetään prepared statementteja tälläisiin tilanteisiin nii security on bueno :3 vaikka nää onki vähän raskaita...
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, elokuva.getNimi());
+            pstmt.setString(2, elokuva.getTyyppi().name());
+            pstmt.setBoolean(3, elokuva.isIs3D());
+            pstmt.setString(4, elokuva.getPaaHenkilo());
+            pstmt.setInt(5, elokuva.getIkaraja());
+            pstmt.setString(6, elokuva.getEnsiIlta());
+            pstmt.setInt(7, elokuva.getSalinNumero());
+            pstmt.setObject(8, elokuva.getVikaNaytosPaiva());
+            pstmt.setString(9, elokuva.getNaytosAika());
+
+            pstmt.executeUpdate();
+
+            //MUISTA SULKEA CONNECTIONI, ERITTÄIN TÄRKEÄÄ TAI TAPAHTUU KAUHEITA
+            conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     //printtaa databasesta kaikki salit ja niiden infon, myös ID:n!!!
     public void printSalit() {
@@ -84,5 +110,25 @@ public class Database {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
 
         }
+    }
+
+    public void printElokuvat() {
+        try{
+            Class.forName("org.sqlite.JDBC");
+            Connection c = DriverManager.getConnection("jdbc:sqlite:data.db");
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM elokuva");
+            while (rs.next())
+                System.out.println("database ID: " + rs.getInt(1)
+                        + " elokuvan Nimi: " + rs.getInt(2)
+                        + " ohjelmistossa: " + rs.getInt(7) + "-" + rs.getInt(9) //TODO: fixataan tämä
+                );
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+
+        }
+
     }
 }
