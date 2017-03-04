@@ -1,5 +1,6 @@
 package main;
 
+import javax.xml.transform.Result;
 import java.sql.*;
 
 public class Database {
@@ -40,31 +41,28 @@ public class Database {
     }
 
     //TODO: DET FUNKAR INTE, pitää korjata, en jaksa miettiä enää tänään...
-    /*
+
     public void poistaSali(int salinNumero) {
+
+        String sql = "DELETE FROM sali WHERE salinNumero=?";
 
         try {
             Class.forName("org.sqlite.JDBC");
             Connection conn = DriverManager.getConnection("jdbc:sqlite:data.db");
-            Statement stmt = conn.createStatement();
 
-            ResultSet rs = stmt.executeQuery("SELECT salinNumero FROM sali");
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, salinNumero);
+            pstmt.executeUpdate();
+            System.out.println("Sali " + salinNumero + " poistettu onnistuneesti");
+
             //TODO: ei tällä hetkellä kerro, että löytyikö salia vai ei, poistaa vaan jos sattuu löytämään.
-            //TODO: pitäis ehkä käyttää prepared statementtia vaihteeks cba miettii miten se toimis täsä tilanteessa
 
-            while (rs.next()) {
-                if (rs.getInt(1) == salinNumero) {
-                    stmt.executeUpdate("DELETE FROM sali");
-                }
-            }
             conn.close();
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
-
-        System.out.println("Sali " + salinNumero + " poistettu onnistuneesti");
     }
-    */
+
 
 
     //printtaa databasesta kaikki salit ja niiden infon, myös ID:n!!!
