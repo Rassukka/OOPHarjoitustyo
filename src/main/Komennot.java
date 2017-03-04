@@ -66,17 +66,17 @@ public class Komennot {
                                 System.out.println("Sali lisätty onnistuneesti!");
                                 break;
 
-                            //TODO: funkar inte, korjaan myöhemmin, ei jaksa enää tänään.
-                       /* case "poistasali":
-                            System.out.println("Anna salin numero jonka haluat poistaa");
-                            System.out.print("> ");
-                            try {
-                                int poista = scanner.nextInt();
-                                db.poistaSali(poista);
-                            } catch (Exception e) {
-                                System.out.println("Anna numero!");
-                            }
-                            break;*/
+                            case "poistasali":
+                                System.out.println("Anna salin numero jonka haluat poistaa");
+                                System.out.print("> ");
+                                try {
+                                    int poista = scanner.nextInt();
+                                    db.poistaSali(poista);
+                                } catch (Exception e) {
+                                    System.out.println("Anna numero!");
+                                }
+                                //TODO: Jostain syystä break ei toimi, vaan heittää myös "virheellinen komento" viestin
+                                break;
 
                             default:
                                 System.out.println("Virheellinen komento");
@@ -91,7 +91,7 @@ public class Komennot {
         }
     }
 
-//Metodi, joka tulostaa ohjeet, \n vaihtaa riviä
+    //Metodi, joka tulostaa ohjeet, \n vaihtaa riviä
     public void help() {
         System.out.println();
         System.out.println("Komennot: \n" +
