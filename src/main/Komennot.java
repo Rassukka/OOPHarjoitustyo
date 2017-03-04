@@ -28,7 +28,7 @@ public class Komennot {
                     help();
                     break;
 
-                case "printsalit":
+                case "salit":
                     System.out.println("Elokuvateatterissa olevat salit");
                     db.printSalit();
                     break;
@@ -57,6 +57,11 @@ public class Komennot {
                                 helpAdmin();
                                 break;
 
+                            case "salit":
+                                System.out.println("Elokuvateatterissa olevat salit");
+                                db.printSalit();
+                                break;
+
                             case "lisääsali":
                                 System.out.println("anna tiedot salille: (salin numero, rivien määrä, paikkojen määrä riveillä");
                                 System.out.print("> ");
@@ -76,12 +81,11 @@ public class Komennot {
                                 System.out.println("Anna salin numero jonka haluat poistaa");
                                 System.out.print("> ");
                                 try {
-                                    int poista = scanner.nextInt();
-                                    db.poistaSali(poista);
+                                    String poista = scanner.nextLine();
+                                    db.poistaSali(Integer.parseInt(poista));
                                 } catch (Exception e) {
-                                    System.out.println("Anna numero!");
+                                    System.err.println("Anna numero!");
                                 }
-                                //TODO: Jostain syystä break ei toimi, vaan heittää myös "virheellinen komento" viestin
                                 break;
 
                             case "lisääelokuva": //TODO: tää on aika paska
@@ -142,6 +146,7 @@ public class Komennot {
         System.out.println();
         System.out.println("Komennot: \n" +
                 "0: poistu ohjelmasta \n" +
+                "salit: printtaa saatavilla olevat salit \n" +
                 "varaa: varaa elokuviin lippuja, sekä paikkoja \n");
     }
     public void helpAdmin() {
@@ -149,7 +154,8 @@ public class Komennot {
         System.out.println("Komennot: \n" +
                 "0: poistu asiakastilaan \n" +
                 "lisääsali: lisää sali elokuvateatteriin \n" +
-                "printsalit: printtaa saatavilla olevat salit \n" +
+                "poistasali: poistaa salin elokuvateatterista \n" +
+                "salit: printtaa saatavilla olevat salit \n" +
                 "lisääelokuva: lisää elokuvia \n ");
     }
 }
