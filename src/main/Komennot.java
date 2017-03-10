@@ -92,43 +92,40 @@ public class Komennot {
                                 }
                                 break;
 
-                            case "lisääelokuva": //TODO: tää on aika paska
+                            case "lisääelokuva":
                                 String[] elotiedot = new String[9];
 
-                                System.out.println("erota parametrit pilkulla ja välilyönnillä");
-                                System.out.println("anna elokuvan nimi: (merkkijono)");
-                                System.out.print("> ");
+                                System.out.print("Anna elokuvan nimi: (merkkijono)"+"\n"+"> ");
                                 elotiedot[0] = scanner.nextLine();
-
-                                System.out.println("anna elokuvan ikäraja(numero), päähenkilö(merkkijono) ja onko elokuva 3D(true/false)");
-                                System.out.print("> ");
-                                String elotiedot2[] = scanner.nextLine().split(", ");
-                                elotiedot[2] = elotiedot2[2];
-                                elotiedot[3] = elotiedot2[1];
-                                elotiedot[4] = elotiedot2[0];
-
+                                System.out.print("Anna elokuvan ikäraja: (numero)"+"\n"+"> ");
+                                elotiedot[4] = scanner.nextLine();
+                                System.out.print("Anna elokuvan päähenkilön nimi: (merkkijono)"+"\n"+"> ");
+                                elotiedot[3] = scanner.nextLine();
+                                System.out.print("Onko elokuva 3D?: (true/false)"+"\n"+"> ");
+                                elotiedot[2] = scanner.nextLine();
                                 System.out.println("anna elokuvan tyyppi: (TOIMINTA, SEIKKAILU, ROMANTIIKKA, JANNITYS,\n" +
                                         "    ANIMAATIO, KLASSIKKO, KAUHU, KOMEDIA,\n" +
                                         "    KOTIMAINEN, FANTASIA tai DRAAMA)");
                                 System.out.print("> ");
                                 elotiedot[1] = scanner.nextLine().toUpperCase();
-
-                                System.out.println("anna elokuvan ensi-ilta sekä viimeinen näytöspäivä (yyyy-mm-dd), salinumero ja näytösaika(merkkijono)");
-                                System.out.print("> ");
-                                String elotiedot3[] = scanner.nextLine().split(", ");
-                                elotiedot[5] = elotiedot3[0];
-                                elotiedot[6] = elotiedot3[2];
-                                elotiedot[7] = elotiedot3[1];
-                                elotiedot[8] = elotiedot3[3];
+                                System.out.print("Anna ensi-ilta: (yyyy-mm-dd) (esim: 2014-05-01)"+"\n"+"> ");
+                                elotiedot[5] = scanner.nextLine();
+                                System.out.print("Anna viimeinen näytös päivä: (yyyy-mm-dd) (esim: 2014-05-01)"+"\n"+"> ");
+                                elotiedot[7] = scanner.nextLine();
+                                System.out.print("Salinumero: (numero)"+"\n"+"> ");
+                                elotiedot[6] = scanner.nextLine();
+                                System.out.print("Anna näytösaika: (merkkijono)"+"\n"+"> ");
+                                elotiedot[8] = scanner.nextLine();
 
                                 try {
-                                    Elokuva elokuva = new Elokuva(elotiedot[0], Tyyppi.valueOf(elotiedot[1]), Boolean.parseBoolean(elotiedot[2]), elotiedot[3], Integer.parseInt(elotiedot[4]), elotiedot[5], Integer.parseInt(elotiedot[6]), LocalDate.parse(elotiedot[7]), elotiedot[8]);
+                                    Elokuva elokuva = new Elokuva(elotiedot[0], Tyyppi.valueOf(elotiedot[1]), Boolean.parseBoolean(elotiedot[2]),
+                                            elotiedot[3], Integer.parseInt(elotiedot[4]), elotiedot[5], Integer.parseInt(elotiedot[6]),
+                                            LocalDate.parse(elotiedot[7]), elotiedot[8]);
                                     db.lisaaElokuva(elokuva);
                                 } catch (Exception e) {
                                     System.err.println("Virheelliset tiedot...");
                                     break;
                                 }
-
                                 System.out.println("Elokuva lisätty onnistuneesti!");
                                 break;
 

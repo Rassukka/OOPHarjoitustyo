@@ -119,8 +119,7 @@ public class Database {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM elokuva");
             while (rs.next()) {  //TODO: vielä puuttuu näytös päivät
-                System.out.println("Database ID: " + rs.getInt(1) + "\n" +
-                        " Elokuvan Nimi: " + rs.getString(2) + "\n" +
+                System.out.println(" Elokuvan Nimi: " + rs.getString(2) + "\n" +
                         " Päähenkilö: " + rs.getString(5) + "\n" +
                         " Genre: " + rs.getString(3) + "\n" +
                         " Näytösaika: " + rs.getString(10) + "\n" +
