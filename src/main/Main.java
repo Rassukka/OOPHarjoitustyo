@@ -6,7 +6,6 @@ public class Main {
         Komennot kom = new Komennot();
     }
     //Jaksa tapella staattisten metodien kans, joten täällä vain tehdään luokka komennoille jossa sit tapahtuu
-    //TODO: Joku parempi desing pattern tälle???
     //TODO: Kirjoitetut testit?
     //Pidetään sali "ylimpänä" luokkana, eli ei tehdä enään elokuvateatteri luokkaa, turhaa duunia imo...
     //Luokat kirjoitettu public näkyvyydellä atm, voisi vaihtaa protected kaikkiin jos meinataan kirjoittaa vaan tähän pakettiin?

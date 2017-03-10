@@ -32,7 +32,6 @@ public class Database {
 
             pstmt.executeUpdate();
 
-            //TODO: Connectionin tuplachekkaus????
             //MUISTA SULKEA CONNECTIONI, ERITTÄIN TÄRKEÄÄ TAI TAPAHTUU KAUHEITA
             conn.close();
         } catch (SQLException | ClassNotFoundException e) {
@@ -40,7 +39,6 @@ public class Database {
         }
     }
 
-    //TODO: DET FUNKAR INTE, pitää korjata, en jaksa miettiä enää tänään...
 
     public void poistaSali(int salinNumero) {
 
@@ -100,11 +98,12 @@ public class Database {
             //Kun vaan luetaan tiedostosta voi käyttää ihan vaan resultsettiä, ei tarvii huolehtii prepared statementeista.
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM sali");
-            while (rs.next())
+            while (rs.next()) {
                 System.out.println("database ID: " + rs.getInt(1)
                         + " salin Numero: " + rs.getInt(2)
                         + " rivit: " + rs.getInt(3)
                         + " paikkoja rivillä: " + rs.getInt(4));
+            }
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -119,11 +118,19 @@ public class Database {
 
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM elokuva");
-            while (rs.next())
-                System.out.println("database ID: " + rs.getInt(1)
-                        + " elokuvan Nimi: " + rs.getInt(2)
-                        + " ohjelmistossa: " + rs.getInt(7) + "-" + rs.getInt(9) //TODO: fixataan tämä
+            while (rs.next()) {  //TODO: vielä puuttuu näytös päivät
+                System.out.println("Database ID: " + rs.getInt(1) + "\n" +
+                        " Elokuvan Nimi: " + rs.getString(2) + "\n" +
+                        " Päähenkilö: " + rs.getString(5) + "\n" +
+                        " Genre: " + rs.getString(3) + "\n" +
+                        " Näytösaika: " + rs.getString(10) + "\n" +
+                        " Ohjelmistossa: " + rs.getString(7) + " - " + rs.getString(9) + "\n" +
+                        " Sali: " + rs.getInt(8) + "\n" +
+                        " Onko 3D: " + rs.getBoolean(4) + "\n" +
+                        " Ikäraja: " + rs.getInt(6) + "\n" +
+                        "========================================"
                 );
+            }
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());

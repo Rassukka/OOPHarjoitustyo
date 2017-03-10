@@ -33,9 +33,13 @@ public class Komennot {
                     db.printSalit();
                     break;
 
+                case "elokuvat":
+                    System.out.println("Elokuvat:");
+                    db.printElokuvat();
+                    break;
+
                 case "varaa":
                     System.out.println("Tällä hetkellä ohjelmistossa olevat elokuvat:");
-                    db.printElokuvat();
                     break;
 
                 //Siirtyy jäsrjestelmänvalvoja tilaan.
