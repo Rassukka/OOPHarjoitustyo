@@ -1,6 +1,5 @@
 package main;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 
 public class Database {
@@ -9,16 +8,17 @@ public class Database {
     //Periaatteessa tarkoittaa vain sitä, että luokasta ei voi koskaan tehdä enempää instanceja kuin vain tämä 1, SQLite sekoaa jos näin tapahtuu
     private static Database instance = new Database();
 
-    private Database(){}
+    private Database() {
+    }
 
-    public static Database getInstance(){
+    public static Database getInstance() {
         return instance;
     }
 
     //Singleton toteutus loppuu --> alle kaikki database metodit, ryhmitellään ne kuitenkin sen mukaan mihin olioon ne vaikuttaa.
 
     public void lisaaSali(Sali sali) {
-        String sql = "INSERT INTO sali(salinNumero, rivit, paikat) " + "VALUES (?,?,?)";
+        String sql = "INSERT INTO sali(salinNumero, rivit, paikatRiveilla) " + "VALUES (?,?,?)";
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -37,6 +37,27 @@ public class Database {
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public int[] getSalinNumerot(int salinNumero) {
+        String sql = "SELECT * FROM sali WHERE salinNumero=?";
+        int[] result = null;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:data.db");
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, salinNumero);
+            ResultSet rs = pstmt.executeQuery();
+
+            result = new int[]{rs.getInt(3), rs.getInt(4)};
+
+            conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return result;
     }
 
 
@@ -62,7 +83,7 @@ public class Database {
     }
 
     public void lisaaElokuva(Elokuva elokuva) {
-        String sql = "INSERT INTO elokuva(nimi, tyyppi, is3D, paaHenkilo, ikaraja, ensiIlta, salinNumero, vikanaytos, naytosAika) " + "VALUES (?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO elokuva(nimi, tyyppi, is3D, paaHenkilo, ikaraja, ensiIlta, salinNumero, vikanaytos, naytosAika, paikat) " + "VALUES (?,?,?,?,?,?,?,?,?,?)";
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -79,6 +100,7 @@ public class Database {
             pstmt.setInt(7, elokuva.getSalinNumero());
             pstmt.setObject(8, elokuva.getVikaNaytosPaiva());
             pstmt.setString(9, elokuva.getNaytosAika());
+            pstmt.setString(10, elokuva.paikatToDatabaseString());
 
             pstmt.executeUpdate();
 
@@ -89,7 +111,41 @@ public class Database {
         }
     }
 
+    public void printPaikat(String nimi) {
+        String sql = "SELECT * FROM elokuva WHERE nimi=?";
+        String dbPaikat = null;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:data.db");
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, nimi);
+            ResultSet rs = pstmt.executeQuery();
+            dbPaikat = rs.getString("paikat");
+
+            conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        String[] eroteltu = dbPaikat.split(",");
+
+        String print = "";
+        String edellinen = "A";
+        for(String s : eroteltu) {
+            if(!s.substring(0,1).equals(edellinen)) {
+                print = print + "\n";
+            }
+            edellinen = s.substring(0, 1);
+            print = print + s + " | ";
+        }
+        System.out.print(print);
+        System.out.println();
+    }
+
     //printtaa databasesta kaikki salit ja niiden infon, myös ID:n!!!
+    //TODO: KORJAA TÄMÄ, pitäisi tulostaa nätin neliön paikoista ja niiden varaustilanteesta
     public void printSalit() {
         try {
             Class.forName("org.sqlite.JDBC");

@@ -75,7 +75,7 @@ public class Komennot {
                                     db.lisaaSali(sali);
                                 } catch (Exception e) {
                                     //TODO: Pitäisiko tähän lisätä looppi, jotta saa yrittää uudelleen niin kauan kun tiedot menee oikein, tai poistua kirjoittamalla 0?
-                                    System.err.println("Virheelliset tiedot...");
+                                    System.err.println("Virheelliset tiedot... varmista ettei rivien määrä ole yli 30!");
                                     break;
                                 }
                                 System.out.println("Sali lisätty onnistuneesti!");
@@ -92,6 +92,9 @@ public class Komennot {
                                 }
                                 break;
 
+                            case "printelokuva":
+                                db.printPaikat("moi");
+                                break;
                             case "lisääelokuva":
                                 String[] elotiedot = new String[9];
 
@@ -112,6 +115,7 @@ public class Komennot {
                                 elotiedot[5] = scanner.nextLine();
                                 System.out.print("Anna viimeinen näytös päivä: (yyyy-mm-dd) (esim: 2014-05-01)"+"\n"+"> ");
                                 elotiedot[7] = scanner.nextLine();
+                                //TODO: Tarkista että onko sali olemassa! tärkee...
                                 System.out.print("Salinumero: (numero)"+"\n"+"> ");
                                 elotiedot[6] = scanner.nextLine();
                                 System.out.print("Anna näytösaika: (merkkijono)"+"\n"+"> ");
@@ -150,6 +154,7 @@ public class Komennot {
                 "salit: printtaa saatavilla olevat salit \n" +
                 "varaa: varaa elokuviin lippuja, sekä paikkoja \n");
     }
+
     public void helpAdmin() {
         System.out.println();
         System.out.println("Komennot: \n" +

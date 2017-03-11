@@ -2,6 +2,7 @@ package main;
 
 
 import java.time.LocalDate; // päivämäärät tällai
+import java.util.ArrayList;
 
 public class Elokuva {
 
@@ -21,7 +22,7 @@ public class Elokuva {
     private int salinNumero;
     private LocalDate vikaNaytosPaiva; //vika päivä ku leffa pyörii?
     private String naytosAika; // esim "18:00"
-
+    private ArrayList<Paikat> paikat;
 
     public Elokuva(String nimi, Tyyppi tyyppi, boolean is3D, String paaHenkilo, int ikaraja, String ensiIlta, int salinNumero, LocalDate vikaNaytosPaiva, String naytosAika) {
 
@@ -34,6 +35,7 @@ public class Elokuva {
         this.salinNumero = salinNumero;
         this.vikaNaytosPaiva = vikaNaytosPaiva;
         this.naytosAika = naytosAika;
+        this.paikat = teePaikat();
 
     }
 
@@ -94,5 +96,36 @@ public class Elokuva {
     public String getNaytosAika() { return naytosAika; }
 
     public void setNaytosAika(String naytosAika) { this.naytosAika = naytosAika; }
+
+    public String paikatToDatabaseString() {
+        String string = "";
+
+        //Tallennettu nyt databaseen näin, saa muuttaa jos tulee parempi idea...
+        for (Paikat p : paikat) {
+            string = string + p.getPaikka() + ":" + p.stringVapaa() + ",";
+        }
+
+        return string;
+    }
+
+    //TODO: Print funktio joka printtaa vapaat paikat nätisti ulos
+
+    private ArrayList<Paikat> teePaikat() {
+
+        Database db = Database.getInstance();
+
+        int[] numerot = db.getSalinNumerot(salinNumero);
+
+        paikat = new ArrayList<>();
+
+        String[] aakkoset = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "O", "Å", "Ä", "Ö"};
+
+        for (int i = 0; i < numerot[0]; i++) {
+            for (int j = 1; j <= numerot[1]; j++) {
+                paikat.add(new Paikat(aakkoset[i] + j, true));
+            }
+        }
+        return paikat;
+    }
 
 }

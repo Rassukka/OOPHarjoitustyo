@@ -1,5 +1,7 @@
 package main;
 
+import java.util.ArrayList;
+
 public class Sali {
 
     private int salinNumero;
@@ -35,4 +37,5 @@ public class Sali {
     public void setPaikatRiveilla(int paikatRiveilla) {
         this.paikatRiveilla = paikatRiveilla;
     }
+
 }
