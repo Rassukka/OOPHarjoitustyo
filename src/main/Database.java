@@ -243,9 +243,15 @@ public class Database {
             ResultSet rs = stmt.executeQuery("SELECT * FROM elokuva");
             while (rs.next()) {
                 if ((rs.getString(2).compareTo(nimi)) == 0) {
+                    rs.close();
+                    stmt.close();
+                    c.close();
                     return true;
                 }
             }
+            rs.close();
+            stmt.close();
+            c.close();
             return false;
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -253,8 +259,7 @@ public class Database {
         }
     }
 
-    public String[] elokuvanTiedot(String nimi){
-        String[] tiedot = new String[11];
+    public String elokuvanPaikat(String nimi){
         try {
             Class.forName("org.sqlite.JDBC");
             Connection c = DriverManager.getConnection("jdbc:sqlite:data.db");
@@ -263,16 +268,46 @@ public class Database {
             ResultSet rs = stmt.executeQuery("SELECT * FROM elokuva");
             while (rs.next()) {
                 if ((rs.getString(2).compareTo(nimi)) == 0) {
-                    for(int i = 2; i<10; i++){
-                        System.out.println(rs.getString(i));
-                        tiedot[i-2]= (rs.getString(i));
-                    }
+                    String str = rs.getString(11);
+                    rs.close();
+                    stmt.close();
+                    c.close();
+                    return str;
                 }
+                rs.close();
+                stmt.close();
+                c.close();
+                return "Virhe";
             }
-            return tiedot;
+            c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            return tiedot;
+            return "Virhe";
+        }
+
+        return "Virhe";
+    }
+
+    public void paivitaPaikat(String nimi, String paikat) {
+
+        String sql = "UPDATE elokuva SET paikat = ?";
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:data.db");
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, paikat);
+            pstmt.executeUpdate();
+
+            pstmt.close();
+            conn.close();
+
+            System.out.println("PaikkojenVarausStatusTM päivitetty ajantasalle");
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
     }
+
 }

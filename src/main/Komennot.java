@@ -1,14 +1,12 @@
 package main;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Komennot{
 
     private Scanner scanner = new Scanner(System.in);
     private Database db = Database.getInstance();
-    ArrayList<Elokuva> elokuvat = new ArrayList<Elokuva>();
 
     //Komennot luokka, kutsutaan main methodista (ei paras vaihtoehto varmaankaan tehdä näin???) lisää uusi komento case:na ja kirjoita mitä komento tekee
     //Muista lisätä myös help methodiin komento, ja mitä se tekee.
@@ -44,26 +42,33 @@ public class Komennot{
                     System.out.println("Elokuvan nimi: ");
                     String elokuvanNimi = scanner.nextLine();
                     if(db.onkoElokuvaa(elokuvanNimi)) {
-                        String[] tiedot = db.elokuvanTiedot(elokuvanNimi);
-                        System.out.println(tiedot[9]);
-                        String[] paikat = tiedot[9].split(",");
 
+                        System.out.println("Valitse paikka: ");
                         db.printPaikat(elokuvanNimi);
+                        System.out.print("");
 
-                        //luo uuden elokuva olion databasen attribuuteilla
-                        elokuvat.add(new Elokuva(tiedot[0], Tyyppi.valueOf(tiedot[1]), Boolean.parseBoolean(tiedot[2]), tiedot[3], Integer.parseInt(tiedot[4]), tiedot[5], Integer.parseInt(tiedot[6]), LocalDate.parse(tiedot[7]), tiedot[8]));
+                        String paikat = db.elokuvanPaikat(elokuvanNimi);
+
+                        String paikka = scanner.nextLine();
+                        if(paikka.isEmpty()){
+                            System.out.println("Et valinnut paikkaa");
+                            break;
+                        } else if (paikat.contains(paikka + ":true")){
+                            System.out.println("Paikka vapaana.");
+                        } else if (paikat.contains(paikka + ":false")){
+                            System.out.println("Paikka on varattu. Yritä uudestaan");
+                            break;
+                        } else {
+                            System.out.println("Paikkaa ei ole");
+                            break;
+                        }
 
 
-                        System.out.print("Valitse paikka: ");
-
-                        for (int i = 0; i < elokuvat.size(); i++) {
-                            if (elokuvat.get(i).getNimi().compareTo(elokuvanNimi) == 0) {
-                                System.out.println("Haluatko varmasti varata paikan (kyllä/en): ");
-                                if (scanner.nextLine() == "kyllä") {
-                                } else {
-                                    System.out.println("Varaus peruttu.");
-                                }
-                            }
+                        System.out.println("Haluatko varmasti varata paikan (kyllä/en): ");
+                        if (scanner.nextLine().compareTo("kyllä") == 0 ){
+                            db.paivitaPaikat(elokuvanNimi, paikat.replace(paikka+":true",paikka+":false"));
+                        } else {
+                            System.out.println("Paikan varaus peruttu.");
                         }
                     } else {
                         System.out.println("Elokuvaa ei löytynyt nimellä " + elokuvanNimi);
