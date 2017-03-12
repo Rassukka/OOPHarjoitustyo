@@ -1,6 +1,7 @@
 package main;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Database {
 
@@ -133,8 +134,8 @@ public class Database {
 
         String print = "";
         String edellinen = "A";
-        for(String s : eroteltu) {
-            if(!s.substring(0,1).equals(edellinen)) {
+        for (String s : eroteltu) {
+            if (!s.substring(0, 1).equals(edellinen)) {
                 print = print + "\n";
             }
             edellinen = s.substring(0, 1);
@@ -144,8 +145,6 @@ public class Database {
         System.out.println();
     }
 
-    //printtaa databasesta kaikki salit ja niiden infon, myös ID:n!!!
-    //TODO: KORJAA TÄMÄ, pitäisi tulostaa nätin neliön paikoista ja niiden varaustilanteesta
     public void printSalit() {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -155,10 +154,22 @@ public class Database {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM sali");
             while (rs.next()) {
-                System.out.println("database ID: " + rs.getInt(1)
-                        + " salin Numero: " + rs.getInt(2)
-                        + " rivit: " + rs.getInt(3)
-                        + " paikkoja rivillä: " + rs.getInt(4));
+                System.out.println("Salin numero: " + rs.getInt(2));
+                for (int i = 1; i <= rs.getInt(4);i++){
+                    for (int j = 1;j <= rs.getInt(3);j++){
+                        if (j != rs.getInt(3)){ System.out.print("x"); }
+                        else{ System.out.println("x " + (rs.getInt(4)-i+1)); break; }
+                    }
+                }
+                String[] aakkoset = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "O", "Å", "Ä", "Ö"};
+                for (int i = 1; i <= rs.getInt(3);i++){
+                    if(i!=rs.getInt(3)){ System.out.print(aakkoset[i-1]); }
+                    else{
+                        System.out.println(aakkoset[i-1]);
+                        System.out.println("Näyttämö");
+                        System.out.println("=======================");
+                    }
+                }
             }
             c.close();
         } catch (Exception e) {
@@ -167,8 +178,37 @@ public class Database {
         }
     }
 
+    public void printSali(int sali) {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            Connection c = DriverManager.getConnection("jdbc:sqlite:data.db");
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sali");
+            while (rs.next()) {
+                System.out.println("Sali " + rs.getInt(2));
+                for (int i = 1; i <= rs.getInt(4);i++){
+                    for (int j = 1;j <= rs.getInt(3);j++){
+                        if (j != rs.getInt(3)){ System.out.print("x"); }
+                        else{ System.out.println("x"); break; }
+                    }
+                }
+                String[] aakkoset = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "O", "Å", "Ä", "Ö"};
+                for (int i = 1; i <= rs.getInt(3);i++){
+                    if(i!=rs.getInt(3)){ System.out.print(aakkoset[i-1]); }
+                    else{
+                        System.out.println(aakkoset[i-1]);
+                    }
+                }
+            }
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+    }
+
     public void printElokuvat() {
-        try{
+        try {
             Class.forName("org.sqlite.JDBC");
             Connection c = DriverManager.getConnection("jdbc:sqlite:data.db");
 
@@ -192,5 +232,47 @@ public class Database {
 
         }
 
+    }
+
+    public boolean onkoElokuvaa(String nimi) {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            Connection c = DriverManager.getConnection("jdbc:sqlite:data.db");
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM elokuva");
+            while (rs.next()) {
+                if ((rs.getString(2).compareTo(nimi)) == 0) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false;
+        }
+    }
+
+    public String[] elokuvanTiedot(String nimi){
+        String[] tiedot = new String[11];
+        try {
+            Class.forName("org.sqlite.JDBC");
+            Connection c = DriverManager.getConnection("jdbc:sqlite:data.db");
+
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM elokuva");
+            while (rs.next()) {
+                if ((rs.getString(2).compareTo(nimi)) == 0) {
+                    for(int i = 2; i<10; i++){
+                        System.out.println(rs.getString(i));
+                        tiedot[i-2]= (rs.getString(i));
+                    }
+                }
+            }
+            return tiedot;
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return tiedot;
+        }
     }
 }

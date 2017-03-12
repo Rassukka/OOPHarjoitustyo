@@ -1,12 +1,14 @@
 package main;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Komennot {
+public class Komennot{
 
     private Scanner scanner = new Scanner(System.in);
     private Database db = Database.getInstance();
+    ArrayList<Elokuva> elokuvat = new ArrayList<Elokuva>();
 
     //Komennot luokka, kutsutaan main methodista (ei paras vaihtoehto varmaankaan tehdä näin???) lisää uusi komento case:na ja kirjoita mitä komento tekee
     //Muista lisätä myös help methodiin komento, ja mitä se tekee.
@@ -39,7 +41,34 @@ public class Komennot {
                     break;
 
                 case "varaa":
-                    System.out.println("Tällä hetkellä ohjelmistossa olevat elokuvat:");
+                    System.out.println("Elokuvan nimi: ");
+                    String elokuvanNimi = scanner.nextLine();
+                    if(db.onkoElokuvaa(elokuvanNimi)) {
+                        String[] tiedot = db.elokuvanTiedot(elokuvanNimi);
+                        System.out.println(tiedot[9]);
+                        String[] paikat = tiedot[9].split(",");
+
+                        db.printPaikat(elokuvanNimi);
+
+                        //luo uuden elokuva olion databasen attribuuteilla
+                        elokuvat.add(new Elokuva(tiedot[0], Tyyppi.valueOf(tiedot[1]), Boolean.parseBoolean(tiedot[2]), tiedot[3], Integer.parseInt(tiedot[4]), tiedot[5], Integer.parseInt(tiedot[6]), LocalDate.parse(tiedot[7]), tiedot[8]));
+
+
+                        System.out.print("Valitse paikka: ");
+
+                        for (int i = 0; i < elokuvat.size(); i++) {
+                            if (elokuvat.get(i).getNimi().compareTo(elokuvanNimi) == 0) {
+                                System.out.println("Haluatko varmasti varata paikan (kyllä/en): ");
+                                if (scanner.nextLine() == "kyllä") {
+                                } else {
+                                    System.out.println("Varaus peruttu.");
+                                }
+                            }
+                        }
+                    } else {
+                        System.out.println("Elokuvaa ei löytynyt nimellä " + elokuvanNimi);
+                    }
+
                     break;
 
                 //Siirtyy jäsrjestelmänvalvoja tilaan.
@@ -152,6 +181,7 @@ public class Komennot {
         System.out.println("Komennot: \n" +
                 "0: poistu ohjelmasta \n" +
                 "salit: printtaa saatavilla olevat salit \n" +
+                "elokuvat: listaa ohjelmistossa olevat elokuvat \n" +
                 "varaa: varaa elokuviin lippuja, sekä paikkoja \n");
     }
 

@@ -97,6 +97,8 @@ public class Elokuva {
 
     public void setNaytosAika(String naytosAika) { this.naytosAika = naytosAika; }
 
+    public ArrayList<Paikat> getPaikat() { return paikat; }
+
     public String paikatToDatabaseString() {
         String string = "";
 
